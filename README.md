@@ -12,3 +12,7 @@ This is a mini search engine built using Flask that crawls web pages, indexes th
 - 📝 **Text Summarization**: Generates concise summaries using Hugging Face’s T5 model.
 - 🔍 **Autocomplete**: Provides query suggestions based on crawled data.
 - 💾 **SQLite Database**: Stores crawled data for efficient querying.
+
+---
+
+![MSE](MSE.png)
