@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Search Engine</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for search form and results */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styling */
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        /* Search form styling */
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        #search-box {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #search-box:focus {
+            border-color: #4CAF50;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for the search results */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #4CAF50;
+        }
+
+        small {
+            color: #777;
+            font-size: 14px;
+        }
+
+        em {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Styling for the snippet and summary sections */
+        p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        mark {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        /* Autocomplete styling */
+        datalist {
+            width: 300px;
+        }
+
+        /* Adding some responsiveness */
+        @media screen and (max-width: 768px) {
+            #search-box {
+                width: 250px;
+            }
+
+            button {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mini Search Engine</h1>
+
+    <!-- Search form -->
+    <form action="/search">
+        <input type="text" name="q" id="search-box" placeholder="Enter search query" autocomplete="off" list="suggestions">
+        <datalist id="suggestions"></datalist>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Displaying search results -->
+    <ul>
+        {% for url, title, snippet, summary in results %}
+            <li>
+                <a href="{{ url }}">{{ title }}</a><br>
+                <small>{{ url }}</small><br>
+                <em>{{ snippet|safe }}</em><br>
+                <strong>Summary:</strong><br>
+                <p>{{ summary }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    // Autocomplete functionality
+    $("#search-box").on("input", function () {
+        const term = this.value;
+        if (term.length > 0) {
+            $.get("/autocomplete", { term }, function (data) {
+                let options = "";
+                data.forEach(function (item) {
+                    options += `<option value="${item}">`;
+                });
+                $("#suggestions").html(options);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
